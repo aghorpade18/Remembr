@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://remembr-blush.vercel.app/api/:path*"
+      "destination": "https://remembr-blush.vercel.app/api/*"
     },
     {
       "source": "/(.*)",
