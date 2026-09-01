@@ -15,18 +15,27 @@ const useStyles = makeStyles({
   root: {
     boxSizing: 'border-box',
     width: '100%',
+    minHeight: '100vh',
     maxWidth: '1280px',
     margin: '0 auto',
-    padding: '24px',
-    '@media (max-width: 600px)': { padding: '16px' }
+    padding: '32px 24px',
+    '@media (max-width: 600px)': { padding: '20px 16px' }
   },
   headerRow: {
     display: 'flex',
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: '12px',
-    marginBottom: '20px'
+    gap: '16px',
+    marginBottom: '24px',
+    paddingBottom: '16px',
+    borderBottom: '1px solid #e0e0e0'
+  },
+  title: {
+    color: '#242424',
+    fontWeight: '600',
+    fontSize: '28px',
+    '@media (max-width: 600px)': { fontSize: '22px' }
   },
   teamPicker: {
     display: 'flex',
@@ -38,12 +47,31 @@ const useStyles = makeStyles({
   teamDropdown: {
     minWidth: '240px',
     maxWidth: '360px',
-    float: 'right',
+    backgroundColor: '#fff',
+    borderRadius: '6px',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
     '@media (max-width: 600px)': { minWidth: '100%' }
   },
-  tabs: { marginBottom: '24px', overflowX: 'auto' },
-  centered: { textAlign: 'center', padding: '40px', color: '#666' },
-  error: { color: '#b10e1c' }
+  tabs: {
+    marginBottom: '28px',
+    overflowX: 'auto',
+    backgroundColor: '#fff',
+    borderRadius: '8px',
+    padding: '4px',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
+  },
+  content: {
+    animation: 'fadeIn 0.2s ease-in-out'
+  },
+  centered: {
+    textAlign: 'center',
+    padding: '60px 20px',
+    color: '#666',
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+  },
+  error: { color: '#b10e1c', fontWeight: '500' }
 });
 
 const TAB_ROUTES = [
@@ -109,7 +137,7 @@ export default function App() {
   return (
     <div className={styles.root}>
       <div className={styles.headerRow}>
-        <Title1>Admin Configuration</Title1>
+        <Title1 className={styles.title}>Admin Configuration</Title1>
       </div>
 
       <div className={styles.teamRow}>
@@ -146,17 +174,21 @@ export default function App() {
         ))}
       </TabList>
 
-      {loadingTeams ? (
-        <div className={styles.centered}>Loading team context...</div>
-      ) : teamId ? (
-        <Routes>
-          <Route path="/" element={<Permissions key={teamId} teamId={teamId} />} />
-          <Route path="/skills" element={<Skills key={teamId} teamId={teamId} />} />
-          <Route path="/integrations" element={<Integrations key={teamId} teamId={teamId} />} />
-        </Routes>
-      ) : (
-        <div className={styles.centered}>{teamError || 'No team is selected.'}</div>
-      )}
+      <div className={styles.content}>
+        {loadingTeams ? (
+          <div className={styles.centered}>
+            <Spinner size="large" label="Loading team context..." />
+          </div>
+        ) : teamId ? (
+          <Routes>
+            <Route path="/" element={<Permissions key={teamId} teamId={teamId} />} />
+            <Route path="/skills" element={<Skills key={teamId} teamId={teamId} />} />
+            <Route path="/integrations" element={<Integrations key={teamId} teamId={teamId} />} />
+          </Routes>
+        ) : (
+          <div className={styles.centered}>{teamError || 'No team is selected.'}</div>
+        )}
+      </div>
     </div>
   );
 }
