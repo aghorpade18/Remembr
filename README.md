@@ -6,7 +6,7 @@ Admin app for Microsoft Teams to manage a custom LLM agent's permissions, skill 
 
 - **Permissions** – Grant/revoke agent access at team or individual user level
 - **Skills Upload** – Upload JSON skill/manifest files scoped to a team
-- **Integrations** – Toggle and configure Wiki, Jira, Confluence, ServiceNow, GitHub, SharePoint (config-only: URLs + API keys)
+- **Integrations** – Toggle and configure Wiki, Jira, GitHub, SharePoint, Teams, Teams Calendar, Outlook, MS PowerPoint, Black Duck, Veracode, Polaris, Workday, Bitbucket (config-only: URLs + API keys)
 - **Full CRUD** on all resources
 - **Fluent UI** – matches Teams look & feel
 - **MongoDB** persistence

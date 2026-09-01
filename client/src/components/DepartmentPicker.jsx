@@ -1,4 +1,5 @@
 import { Dropdown, Option, makeStyles } from '@fluentui/react-components';
+import { getDepartmentDisplayName } from '../utils/departmentDisplay';
 
 const useStyles = makeStyles({
     dropdown: {
@@ -17,13 +18,13 @@ export function DepartmentPicker({ departments, value, onChange, placeholder = '
         <Dropdown
             className={styles.dropdown}
             placeholder={empty ? 'No departments available' : placeholder}
-            value={value || ''}
+            value={getDepartmentDisplayName(value)}
             selectedOptions={value ? [value] : []}
             disabled={disabled || empty}
             onOptionSelect={(_, data) => data.optionValue && onChange(data.optionValue)}
         >
             {(departments || []).map((option) => (
-                <Option key={option} value={option}>{option}</Option>
+                <Option key={option} value={option}>{getDepartmentDisplayName(option)}</Option>
             ))}
         </Dropdown>
     );

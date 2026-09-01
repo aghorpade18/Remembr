@@ -6,6 +6,7 @@ import { Delete24Regular } from '@fluentui/react-icons';
 import { MembersDropdown } from './MembersDropdown';
 import { usePermissionsStyles } from './styles';
 import { filterMembersByDepartment, isDraftRow, normalizeDepartment } from './utils';
+import { getDepartmentDisplayName } from '../../utils/departmentDisplay';
 
 function PermissionRowBase({
     row,
@@ -21,6 +22,7 @@ function PermissionRowBase({
     const styles = usePermissionsStyles();
     const isDraft = isDraftRow(row);
     const department = row.department ? normalizeDepartment(row.department) : '';
+    const departmentLabel = getDepartmentDisplayName(department);
 
     const departmentMembers = useMemo(() => (
         department ? filterMembersByDepartment(members, department) : []
@@ -33,7 +35,7 @@ function PermissionRowBase({
                 <Dropdown
                     className={styles.departmentDropdown}
                     placeholder="Select department"
-                    value={department}
+                    value={departmentLabel}
                     selectedOptions={department ? [department] : []}
                     disabled={isSaving}
                     onOptionSelect={(_, data) => onDepartmentChange(row, data.optionValue)}
@@ -44,7 +46,7 @@ function PermissionRowBase({
                             value={option}
                             disabled={option !== department && assignedDepartments.has(option)}
                         >
-                            {option}
+                            {getDepartmentDisplayName(option)}
                         </Option>
                     ))}
                 </Dropdown>
@@ -76,7 +78,7 @@ function PermissionRowBase({
                 <Text className={styles.cellLabel} size={200} weight="semibold">Actions</Text>
                 <div className={styles.actions}>
                     <Tooltip
-                        content={isDraft ? 'Remove new permission row' : `Delete ${department} permission row`}
+                        content={isDraft ? 'Remove new permission row' : `Delete ${departmentLabel} permission row`}
                         relationship="label"
                         withArrow
                     >
@@ -84,7 +86,7 @@ function PermissionRowBase({
                             size="small"
                             icon={<Delete24Regular />}
                             disabled={isSaving}
-                            aria-label={isDraft ? 'Remove new permission row' : `Delete ${department} permission row`}
+                            aria-label={isDraft ? 'Remove new permission row' : `Delete ${departmentLabel} permission row`}
                             onClick={() => onDelete(row)}
                         />
                     </Tooltip>

@@ -3,6 +3,7 @@ const cors = require('cors');
 const permissionsRouter = require('./routes/permissions');
 const skillsRouter = require('./routes/skills');
 const integrationsRouter = require('./routes/integrations');
+const teamTokensRouter = require('./routes/teamTokens');
 const graphRouter = require('./routes/graph');
 
 const app = express();
@@ -18,6 +19,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/permissions', permissionsRouter);
 app.use('/api/skills', skillsRouter);
 app.use('/api/integrations', integrationsRouter);
+app.use('/api/team-tokens', teamTokensRouter);
 app.use('/api/graph', graphRouter);
 
 app.use((err, _req, res, _next) => {

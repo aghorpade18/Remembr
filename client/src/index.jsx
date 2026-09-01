@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { FluentProvider, webLightTheme } from '@fluentui/react-components';
+import { FluentProvider, teamsLightTheme } from '@fluentui/react-components';
 import { MsalProvider } from '@azure/msal-react';
 import { BrowserRouter } from 'react-router-dom';
 import { msalInstance } from './authConfig';
@@ -10,7 +10,7 @@ msalInstance.initialize().then(() => {
   const root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(
     <MsalProvider instance={msalInstance}>
-      <FluentProvider theme={webLightTheme}>
+      <FluentProvider theme={teamsLightTheme}>
         <BrowserRouter>
           <App />
         </BrowserRouter>

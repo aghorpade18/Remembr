@@ -15,6 +15,8 @@ export const graphScopes = [
   'User.Read',
   'User.Read.All',
   'Team.ReadBasic.All',
+  'Channel.ReadBasic.All',
+  'Chat.ReadBasic',
   'TeamMember.Read.All',
   'GroupMember.Read.All',
   'Directory.Read.All'

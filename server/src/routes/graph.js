@@ -145,6 +145,56 @@ router.get('/teams/:teamId/memberProfiles', async (req, res, next) => {
   }
 });
 
+router.get('/teams/:teamId/channels', async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ error: 'No authorization token' });
+
+    const channels = await fetchGraphCollection(
+      `https://graph.microsoft.com/v1.0/teams/${encodeURIComponent(req.params.teamId)}/channels?$select=id,displayName,membershipType`,
+      authHeader
+    );
+
+    res.json({
+      value: channels
+        .map(channel => ({
+          id: channel.id,
+          displayName: channel.displayName || channel.id,
+          membershipType: channel.membershipType || null
+        }))
+        .sort((a, b) => a.displayName.localeCompare(b.displayName))
+    });
+  } catch (err) {
+    if (err.status) return res.status(err.status).json({ error: err.message });
+    next(err);
+  }
+});
+
+router.get('/me/groupChats', async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ error: 'No authorization token' });
+
+    const chats = await fetchGraphCollection(
+      "https://graph.microsoft.com/v1.0/me/chats?$filter=chatType eq 'group'&$select=id,topic,chatType",
+      authHeader
+    );
+
+    res.json({
+      value: chats
+        .map(chat => ({
+          id: chat.id,
+          displayName: chat.topic || 'Group chat',
+          chatType: chat.chatType
+        }))
+        .sort((a, b) => a.displayName.localeCompare(b.displayName))
+    });
+  } catch (err) {
+    if (err.status) return res.status(err.status).json({ error: err.message });
+    next(err);
+  }
+});
+
 // Get members of a specific team
 router.get('/teams/:teamId/members', async (req, res, next) => {
   try {

@@ -7,6 +7,7 @@ import { Add24Regular, Delete24Regular, Search24Regular } from '@fluentui/react-
 import { PermissionRow } from './permissions/PermissionRow';
 import { usePermissions } from './permissions/usePermissions';
 import { usePermissionsStyles } from './permissions/styles';
+import TeamTokens from './TeamTokens';
 import {
   ALL_FILTER,
   getMemberSearchText,
@@ -96,94 +97,98 @@ export default function Permissions({ teamId }) {
   );
 
   return (
-    <div className={styles.panel}>
-      <div className={styles.toolbar}>
-        <div className={styles.titleBlock}>
-          <Text weight="semibold">Department permissions</Text>
-          <Text size={200}>Control access by department and selected members.</Text>
+    <div className={styles.pageStack}>
+      <div className={styles.panel}>
+        <div className={styles.toolbar}>
+          <div className={styles.titleBlock}>
+            <Text weight="semibold">Department permissions</Text>
+            <Text size={200}>Control access by department and selected members.</Text>
+          </div>
+          <Button
+            appearance="primary"
+            icon={<Add24Regular />}
+            onClick={handleAdd}
+            disabled={hasDraftRow || !canAddRow}
+          >
+            Add row
+          </Button>
         </div>
-        <Button
-          appearance="primary"
-          icon={<Add24Regular />}
-          onClick={handleAdd}
-          disabled={hasDraftRow || !canAddRow}
+
+        <div className={styles.filters}>
+          <Input
+            className={styles.filterControl}
+            contentBefore={<Search24Regular />}
+            placeholder="Search departments or members"
+            value={memberQuery}
+            onChange={(_, data) => setMemberQuery(data.value)}
+          />
+          <Dropdown
+            className={styles.filterControl}
+            value={statusFilter === ALL_FILTER
+              ? 'All statuses'
+              : statusFilter === 'true' ? 'Active' : 'Inactive'}
+            selectedOptions={[statusFilter]}
+            onOptionSelect={(_, data) => setStatusFilter(data.optionValue || ALL_FILTER)}
+          >
+            <Option value={ALL_FILTER}>All statuses</Option>
+            <Option value="true">Active</Option>
+            <Option value="false">Inactive</Option>
+          </Dropdown>
+        </div>
+
+        {error && <Text className={styles.error}>{error}</Text>}
+
+        <div className={styles.table} role="table" aria-label="Department permissions">
+          <div className={styles.tableHeader} role="row">
+            <div className={styles.headerCell} role="columnheader">Department</div>
+            <div className={styles.headerCell} role="columnheader">Members</div>
+            <div className={styles.headerCell} role="columnheader">Status</div>
+            <div className={styles.headerCell} role="columnheader">Actions</div>
+          </div>
+          <div role="rowgroup">
+            {filteredRows.length === 0 ? (
+              <div className={styles.emptyState}>No department rows match the current filters.</div>
+            ) : filteredRows.map((row) => (
+              <PermissionRow
+                key={row._id}
+                row={row}
+                members={members}
+                departments={departments}
+                isSaving={savingId === row._id}
+                assignedDepartments={assignedDepartments}
+                onDepartmentChange={changeDepartment}
+                onMemberToggle={toggleMember}
+                onEnabledChange={toggleEnabled}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        </div>
+
+        <Dialog
+          open={Boolean(pendingDelete)}
+          onOpenChange={(_, data) => !data.open && setPendingDelete(null)}
         >
-          Add row
-        </Button>
+          <DialogSurface>
+            <DialogBody>
+              <DialogTitle>Delete permission row?</DialogTitle>
+              <DialogContent>
+                This will remove the {normalizeDepartment(pendingDelete?.department).toLowerCase()} department permission row.
+              </DialogContent>
+              <DialogActions>
+                <DialogTrigger disableButtonEnhancement>
+                  <Button appearance="secondary">Cancel</Button>
+                </DialogTrigger>
+                <Button appearance="primary" icon={<Delete24Regular />} onClick={confirmDelete}>
+                  Delete
+                </Button>
+              </DialogActions>
+            </DialogBody>
+          </DialogSurface>
+        </Dialog>
       </div>
 
-      <div className={styles.filters}>
-        <Input
-          className={styles.filterControl}
-          contentBefore={<Search24Regular />}
-          placeholder="Search departments or members"
-          value={memberQuery}
-          onChange={(_, data) => setMemberQuery(data.value)}
-        />
-        <Dropdown
-          className={styles.filterControl}
-          value={statusFilter === ALL_FILTER
-            ? 'All statuses'
-            : statusFilter === 'true' ? 'Active' : 'Inactive'}
-          selectedOptions={[statusFilter]}
-          onOptionSelect={(_, data) => setStatusFilter(data.optionValue || ALL_FILTER)}
-        >
-          <Option value={ALL_FILTER}>All statuses</Option>
-          <Option value="true">Active</Option>
-          <Option value="false">Inactive</Option>
-        </Dropdown>
-      </div>
-
-      {error && <Text className={styles.error}>{error}</Text>}
-
-      <div className={styles.table} role="table" aria-label="Department permissions">
-        <div className={styles.tableHeader} role="row">
-          <div className={styles.headerCell} role="columnheader">Department</div>
-          <div className={styles.headerCell} role="columnheader">Members</div>
-          <div className={styles.headerCell} role="columnheader">Status</div>
-          <div className={styles.headerCell} role="columnheader">Actions</div>
-        </div>
-        <div role="rowgroup">
-          {filteredRows.length === 0 ? (
-            <div className={styles.emptyState}>No department rows match the current filters.</div>
-          ) : filteredRows.map((row) => (
-            <PermissionRow
-              key={row._id}
-              row={row}
-              members={members}
-              departments={departments}
-              isSaving={savingId === row._id}
-              assignedDepartments={assignedDepartments}
-              onDepartmentChange={changeDepartment}
-              onMemberToggle={toggleMember}
-              onEnabledChange={toggleEnabled}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
-      </div>
-
-      <Dialog
-        open={Boolean(pendingDelete)}
-        onOpenChange={(_, data) => !data.open && setPendingDelete(null)}
-      >
-        <DialogSurface>
-          <DialogBody>
-            <DialogTitle>Delete permission row?</DialogTitle>
-            <DialogContent>
-              This will remove the {normalizeDepartment(pendingDelete?.department).toLowerCase()} department permission row.
-            </DialogContent>
-            <DialogActions>
-              <DialogTrigger disableButtonEnhancement>
-                <Button appearance="secondary">Cancel</Button>
-              </DialogTrigger>
-              <Button appearance="primary" icon={<Delete24Regular />} onClick={confirmDelete}>
-                Delete
-              </Button>
-            </DialogActions>
-          </DialogBody>
-        </DialogSurface>
-      </Dialog>
+      <TeamTokens teamId={teamId} />
     </div>
   );
 }

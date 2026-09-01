@@ -17,7 +17,10 @@ function SkillRowBase({ skill, onActivate, onDeactivate, onSetDraft, onView, onD
         <div className={styles.tableRow} role="row">
             <div className={styles.cell} role="cell">
                 <Text className={styles.cellLabel} size={200} weight="semibold">File name</Text>
-                <Text weight="semibold">{skill.originalName}</Text>
+                <div className={styles.skillNameBlock}>
+                    <Text weight="semibold">{skill.originalName}</Text>
+                    <Text size={200}>{skill.contentType || 'json'}</Text>
+                </div>
             </div>
             <div className={styles.cell} role="cell">
                 <Text className={styles.cellLabel} size={200} weight="semibold">Uploaded</Text>
@@ -76,7 +79,7 @@ function SkillRowBase({ skill, onActivate, onDeactivate, onSetDraft, onView, onD
 
 const SkillRow = memo(SkillRowBase);
 
-export function SkillsTable({ skills, onActivate, onDeactivate, onSetDraft, onDelete }) {
+export function SkillsTable({ skills, emptyMessage, onActivate, onDeactivate, onSetDraft, onDelete }) {
     const styles = useSkillsStyles();
     const [preview, setPreview] = useState(null);
     const [pendingDelete, setPendingDelete] = useState(null);
@@ -87,7 +90,7 @@ export function SkillsTable({ skills, onActivate, onDeactivate, onSetDraft, onDe
     };
 
     if (skills.length === 0) {
-        return <div className={styles.emptyState}>No skills uploaded for this department yet.</div>;
+        return <div className={styles.emptyState}>{emptyMessage}</div>;
     }
 
     return (

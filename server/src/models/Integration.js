@@ -1,6 +1,20 @@
 const mongoose = require('mongoose');
 
-const TOOL_NAMES = ['wiki', 'jira', 'confluence', 'servicenow', 'github', 'sharepoint'];
+const TOOL_NAMES = [
+  'jira',
+  'confluence',
+  'github',
+  'sharepoint',
+  'teams',
+  'teamscalendar',
+  'outlook',
+  'powerpoint',
+  'blackduck',
+  'veracode',
+  'polaris',
+  'workday',
+  'bitbucket'
+];
 
 const integrationSchema = new mongoose.Schema({
   teamId: { type: String, required: true },

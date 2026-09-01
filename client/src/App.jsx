@@ -1,15 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import {
-  TabList, Tab, makeStyles, Title1, Dropdown, Option, Spinner, Text, Button
+  TabList, Tab, makeStyles, Title1, Spinner
 } from '@fluentui/react-components';
 import {
-  ShieldLock24Regular, DocumentAdd24Regular, PlugConnected24Regular, People24Regular
+  ShieldLock24Regular, DocumentAdd24Regular, PlugConnected24Regular
 } from '@fluentui/react-icons';
 import Permissions from './pages/Permissions';
 import Skills from './pages/Skills';
 import Integrations from './pages/Integrations';
 import { getGraphToken } from './authConfig';
+import { getTeamDisplayName } from './utils/teamDisplay';
 
 const useStyles = makeStyles({
   root: {
@@ -75,10 +76,21 @@ const useStyles = makeStyles({
 });
 
 const TAB_ROUTES = [
-  { value: '/', label: 'Permissions', icon: <ShieldLock24Regular /> },
+  { value: '/', label: 'Permissions & Configuration', icon: <ShieldLock24Regular /> },
   { value: '/skills', label: 'Skills', icon: <DocumentAdd24Regular /> },
   { value: '/integrations', label: 'Integrations', icon: <PlugConnected24Regular /> }
 ];
+
+const DEFAULT_TEAM_NAMES = ['Team EDX', 'EDX'];
+
+function isDefaultTeam(team) {
+  const displayName = getTeamDisplayName(team).trim().toLowerCase();
+  return DEFAULT_TEAM_NAMES.some((teamName) => teamName.toLowerCase() === displayName);
+}
+
+function moveDefaultTeamFirst(teams) {
+  return [...teams].sort((first, second) => Number(isDefaultTeam(second)) - Number(isDefaultTeam(first)));
+}
 
 export default function App() {
   const styles = useStyles();
@@ -99,16 +111,17 @@ export default function App() {
       });
       if (!response.ok) throw new Error('Unable to load your Teams');
       const data = await response.json();
-      const list = data.value || [];
+      const list = moveDefaultTeamFirst(data.value || []);
       setTeams(list);
       if (list.length === 0) {
         setTeamError('No Teams are available for this account');
         setTeamId('');
         return;
       }
-      const nextId = preferInternalId && list.some((team) => team.id === preferInternalId)
+      const defaultTeam = list.find(isDefaultTeam);
+      const nextId = defaultTeam?.id || (preferInternalId && list.some((team) => team.id === preferInternalId)
         ? preferInternalId
-        : list[0].id;
+        : list[0].id);
       setTeamId((current) => current || nextId);
     } catch (err) {
       setTeamError(err.message);
@@ -132,34 +145,12 @@ export default function App() {
     return () => { active = false; };
   }, [loadTeams]);
 
-  const selectedTeamName = teams.find((team) => team.id === teamId)?.displayName || '';
+  const selectedTeamName = getTeamDisplayName(teams.find((team) => team.id === teamId));
 
   return (
     <div className={styles.root}>
       <div className={styles.headerRow}>
-        <Title1 className={styles.title}>Remembr  Admin</Title1>
-        <div className={styles.teamPicker}>
-          {loadingTeams ? (
-            <Spinner size="small" label="Loading teams..." />
-          ) : teams.length > 0 ? (
-            <Dropdown
-              className={styles.teamDropdown}
-              placeholder="Select a team"
-              value={selectedTeamName}
-              selectedOptions={teamId ? [teamId] : []}
-              onOptionSelect={(_, data) => data.optionValue && setTeamId(data.optionValue)}
-            >
-              {teams.map((team) => (
-                <Option key={team.id} value={team.id}>{team.displayName}</Option>
-              ))}
-            </Dropdown>
-          ) : (
-            <>
-              <Text className={styles.error}>{teamError || 'No teams available'}</Text>
-              <Button size="small" onClick={() => loadTeams()}>Retry</Button>
-            </>
-          )}
-        </div>
+        <Title1 className={styles.title}>{selectedTeamName || 'Select a team'}</Title1>
       </div>
 
       <TabList

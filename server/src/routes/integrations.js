@@ -20,16 +20,22 @@ router.get('/:teamId', async (req, res, next) => {
     if (!req.query.department) return res.status(400).json({ error: 'department query is required' });
     const department = normalizeDepartment(req.query.department);
     const filter = { teamId: req.params.teamId, department };
-    let integrations = await Integration.find(filter);
+    let integrations = await Integration.find({ ...filter, tool: { $in: TOOL_NAMES } });
 
-    if (integrations.length === 0) {
-      const defaults = TOOL_NAMES.map((tool) => ({
+    const existingTools = new Set(integrations.map((integration) => integration.tool));
+    const missingTools = TOOL_NAMES.filter((tool) => !existingTools.has(tool));
+
+    if (missingTools.length > 0) {
+      const defaults = missingTools.map((tool) => ({
         teamId: req.params.teamId, department, tool, enabled: false
       }));
-      integrations = await Integration.insertMany(defaults);
+      const created = await Integration.insertMany(defaults);
+      integrations = [...integrations, ...created];
     }
 
-    res.json(integrations);
+    res.json(integrations.sort((first, second) => (
+      TOOL_NAMES.indexOf(first.tool) - TOOL_NAMES.indexOf(second.tool)
+    )));
   } catch (err) { next(err); }
 });
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Dropdown, Option, Spinner, makeStyles, Text, Button } from '@fluentui/react-components';
 import { People24Regular } from '@fluentui/react-icons';
 import { getGraphToken } from '../authConfig';
+import { getTeamDisplayName } from '../utils/teamDisplay';
 
 const useStyles = makeStyles({
   container: { display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' },
@@ -27,7 +28,7 @@ export default function TeamSelector({ selectedTeamId, onTeamSelect }) {
       const teamList = data.value || [];
       setTeams(teamList);
       if (teamList.length > 0 && !selectedTeamId) {
-        onTeamSelect(teamList[0].id, teamList[0].displayName);
+        onTeamSelect(teamList[0].id, getTeamDisplayName(teamList[0]));
       }
     } catch (err) {
       setError(err.message);
@@ -55,15 +56,15 @@ export default function TeamSelector({ selectedTeamId, onTeamSelect }) {
       <Dropdown
         className={styles.dropdown}
         placeholder="Select a team"
-        value={teams.find(t => t.id === selectedTeamId)?.displayName || ''}
+        value={getTeamDisplayName(teams.find(t => t.id === selectedTeamId))}
         selectedOptions={selectedTeamId ? [selectedTeamId] : []}
         onOptionSelect={(_, data) => {
           const team = teams.find(t => t.id === data.optionValue);
-          if (team) onTeamSelect(team.id, team.displayName);
+          if (team) onTeamSelect(team.id, getTeamDisplayName(team));
         }}
       >
         {teams.map(t => (
-          <Option key={t.id} value={t.id}>{t.displayName}</Option>
+          <Option key={t.id} value={t.id}>{getTeamDisplayName(t)}</Option>
         ))}
       </Dropdown>
     </div>

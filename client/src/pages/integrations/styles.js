@@ -27,6 +27,7 @@ export const useIntegrationsStyles = makeStyles({
     grid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+        alignItems: 'start',
         gap: '20px',
         padding: '20px',
         borderTop: '1px solid #e6e6e6'
@@ -34,9 +35,33 @@ export const useIntegrationsStyles = makeStyles({
     card: {
         padding: '20px',
         borderRadius: '10px',
+        alignSelf: 'start',
         transition: 'box-shadow 0.15s ease, transform 0.15s ease',
         ':hover': { boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transform: 'translateY(-2px)' }
     },
-    fields: { display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '16px' },
+    logoFrame: {
+        width: '32px',
+        height: '32px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '8px',
+        backgroundColor: '#f5f7fa',
+        border: '1px solid #e5e7eb'
+    },
+    logoImage: {
+        width: '22px',
+        height: '22px',
+        objectFit: 'contain',
+        display: 'block'
+    },
+    headerActions: { display: 'flex', alignItems: 'center', gap: '8px' },
+    dialogHeader: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '16px'
+    },
+    fields: { display: 'flex', flexDirection: 'column', gap: '10px' },
     cardActions: { display: 'flex', gap: '10px', marginTop: '8px', justifyContent: 'flex-end' }
 });
