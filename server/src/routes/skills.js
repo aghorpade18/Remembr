@@ -10,12 +10,15 @@ function normalizeDepartment(department) {
   return department?.trim() || 'Unassigned';
 }
 
+const ALLOWED_EXTENSIONS = ['.json', '.md', '.txt'];
+
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
-    if (path.extname(file.originalname).toLowerCase() !== '.json') {
-      return cb(new Error('Only JSON files are allowed'));
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (!ALLOWED_EXTENSIONS.includes(ext)) {
+      return cb(new Error('Only JSON, Markdown (.md), and Text (.txt) files are allowed'));
     }
     cb(null, true);
   }
@@ -35,11 +38,22 @@ router.post('/:teamId/upload', upload.single('file'), async (req, res, next) => 
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
     if (!req.body.department) return res.status(400).json({ error: 'Department is required' });
 
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    const rawContent = req.file.buffer.toString('utf-8');
     let content;
-    try {
-      content = JSON.parse(req.file.buffer.toString('utf-8'));
-    } catch {
-      return res.status(400).json({ error: 'Invalid JSON file' });
+    let contentType;
+
+    if (ext === '.json') {
+      try {
+        content = JSON.parse(rawContent);
+        contentType = 'json';
+      } catch {
+        return res.status(400).json({ error: 'Invalid JSON file' });
+      }
+    } else {
+      // .md or .txt - store as text
+      content = rawContent;
+      contentType = ext === '.md' ? 'markdown' : 'text';
     }
 
     const skill = await Skill.create({
@@ -48,7 +62,8 @@ router.post('/:teamId/upload', upload.single('file'), async (req, res, next) => 
       status: 'draft',
       fileName: `${Date.now()}-${req.file.originalname}`,
       originalName: req.file.originalname,
-      content
+      content,
+      contentType
     });
     res.status(201).json(skill);
   } catch (err) { next(err); }

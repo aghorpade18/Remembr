@@ -26,7 +26,7 @@ function SkillRowBase({ skill, onActivate, onDeactivate, onSetDraft, onView, onD
             <div className={styles.cell} role="cell">
                 <Text className={styles.cellLabel} size={200} weight="semibold">Status</Text>
                 <Badge appearance="filled" color={STATUS_COLOR[skill.status] || 'informative'}>
-                    {skill.status}
+                    {skill.status.charAt(0).toUpperCase() + skill.status.slice(1)}
                 </Badge>
             </div>
             <div className={styles.cell} role="cell">
@@ -115,12 +115,16 @@ export function SkillsTable({ skills, onActivate, onDeactivate, onSetDraft, onDe
             </div>
 
             <Dialog open={Boolean(preview)} onOpenChange={(_, data) => !data.open && setPreview(null)}>
-                <DialogSurface>
+                <DialogSurface style={{ maxWidth: '700px' }}>
                     <DialogBody>
                         <DialogTitle>{preview?.originalName}</DialogTitle>
                         <DialogContent>
                             <pre className={styles.preview}>
-                                {preview ? JSON.stringify(preview.content, null, 2) : ''}
+                                {preview ? (
+                                    preview.contentType === 'json' || typeof preview.content === 'object'
+                                        ? JSON.stringify(preview.content, null, 2)
+                                        : preview.content
+                                ) : ''}
                             </pre>
                         </DialogContent>
                         <DialogActions>

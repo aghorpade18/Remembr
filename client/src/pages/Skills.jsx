@@ -53,7 +53,9 @@ export default function Skills({ teamId }) {
       )}
 
       {showSpinner ? (
-        <Spinner label="Loading skills..." />
+        <div className={styles.spinnerContainer}>
+          <Spinner label="Loading skills..." />
+        </div>
       ) : !selectedDepartment ? (
         <div className={styles.emptyState}>
           {departments.length === 0 ? 'No departments found for this team.' : 'Select a department to see skills.'}

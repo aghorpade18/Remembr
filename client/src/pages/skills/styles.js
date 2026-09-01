@@ -8,6 +8,13 @@ export const useSkillsStyles = makeStyles({
         backgroundColor: '#fff',
         boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
     },
+    spinnerContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '60px 20px 80px',
+        minHeight: '200px'
+    },
     toolbar: {
         display: 'flex', flexWrap: 'wrap', gap: '16px', padding: '20px',
         alignItems: 'flex-start', justifyContent: 'space-between',

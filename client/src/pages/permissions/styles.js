@@ -8,6 +8,13 @@ export const usePermissionsStyles = makeStyles({
         backgroundColor: '#fff',
         boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
     },
+    spinnerContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '60px 20px 80px',
+        minHeight: '200px'
+    },
     toolbar: {
         display: 'flex', gap: '16px', padding: '20px',
         alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap',

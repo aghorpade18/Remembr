@@ -65,7 +65,7 @@ const useStyles = makeStyles({
   },
   centered: {
     textAlign: 'center',
-    padding: '60px 20px',
+    padding: '60px 20px 80px',
     color: '#666',
     backgroundColor: '#fff',
     borderRadius: '12px',
@@ -137,31 +137,29 @@ export default function App() {
   return (
     <div className={styles.root}>
       <div className={styles.headerRow}>
-        <Title1 className={styles.title}>Admin Configuration</Title1>
-      </div>
-
-      <div className={styles.teamRow}>
-        {/* <People24Regular /> */}
-        {loadingTeams ? (
-          <Spinner size="small" label="Loading teams..." />
-        ) : teams.length > 0 ? (
-          <Dropdown
-            className={styles.teamDropdown}
-            placeholder="Select a team"
-            value={selectedTeamName}
-            selectedOptions={teamId ? [teamId] : []}
-            onOptionSelect={(_, data) => data.optionValue && setTeamId(data.optionValue)}
-          >
-            {teams.map((team) => (
-              <Option key={team.id} value={team.id}>{team.displayName}</Option>
-            ))}
-          </Dropdown>
-        ) : (
-          <div className={styles.teamRow}>
-            <Text className={styles.error}>{teamError || 'No teams available'}</Text>
-            <Button size="small" onClick={() => loadTeams()}>Retry</Button>
-          </div>
-        )}
+        <Title1 className={styles.title}>Remembr  Admin</Title1>
+        <div className={styles.teamPicker}>
+          {loadingTeams ? (
+            <Spinner size="small" label="Loading teams..." />
+          ) : teams.length > 0 ? (
+            <Dropdown
+              className={styles.teamDropdown}
+              placeholder="Select a team"
+              value={selectedTeamName}
+              selectedOptions={teamId ? [teamId] : []}
+              onOptionSelect={(_, data) => data.optionValue && setTeamId(data.optionValue)}
+            >
+              {teams.map((team) => (
+                <Option key={team.id} value={team.id}>{team.displayName}</Option>
+              ))}
+            </Dropdown>
+          ) : (
+            <>
+              <Text className={styles.error}>{teamError || 'No teams available'}</Text>
+              <Button size="small" onClick={() => loadTeams()}>Retry</Button>
+            </>
+          )}
+        </div>
       </div>
 
       <TabList

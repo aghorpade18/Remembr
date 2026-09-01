@@ -87,7 +87,13 @@ export default function Permissions({ teamId }) {
     setPendingDelete(null);
   };
 
-  if (loading) return <Spinner label="Loading permissions..." />;
+  if (loading) return (
+    <div className={styles.panel}>
+      <div className={styles.spinnerContainer}>
+        <Spinner label="Loading permissions..." />
+      </div>
+    </div>
+  );
 
   return (
     <div className={styles.panel}>

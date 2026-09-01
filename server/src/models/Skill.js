@@ -9,6 +9,7 @@ const skillSchema = new mongoose.Schema({
   fileName: { type: String, required: true },
   originalName: { type: String, required: true },
   content: { type: mongoose.Schema.Types.Mixed, required: true },
+  contentType: { type: String, enum: ['json', 'markdown', 'text'], default: 'json' },
   uploadedBy: { type: String, default: 'admin' },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
