@@ -1,0 +1,46 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.17",
+  "version": "1.0.0",
+  "id": "f6520a33-69c9-4b01-b185-09db030b39cd",
+  "developer": {
+    "name": "Rocket Software",
+    "websiteUrl": "https://localhost:3000",
+    "privacyUrl": "https://localhost:3000/privacy",
+    "termsOfUseUrl": "https://localhost:3000/terms"
+  },
+  "name": {
+    "short": "Agent Admin",
+    "full": "Agent Admin Panel"
+  },
+  "description": {
+    "short": "Manage agent permissions, skills, and tool integrations",
+    "full": "Admin panel for managing custom LLM agent permissions, skill file uploads, and tool integrations (Wiki, Jira, Confluence, ServiceNow, GitHub, SharePoint) scoped to Teams."
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "accentColor": "#5B5FC7",
+  "staticTabs": [
+    {
+      "entityId": "agentAdmin",
+      "name": "Agent Admin",
+      "contentUrl": "https://localhost:3000",
+      "scopes": ["personal"]
+    }
+  ],
+  "configurableTabs": [
+    {
+      "configurationUrl": "https://localhost:3000",
+      "canUpdateConfiguration": true,
+      "scopes": ["team", "groupChat"]
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": ["localhost"],
+  "webApplicationInfo": {
+    "id": "f6520a33-69c9-4b01-b185-09db030b39cd",
+    "resource": "api://localhost:3000/f6520a33-69c9-4b01-b185-09db030b39cd"
+  }
+}

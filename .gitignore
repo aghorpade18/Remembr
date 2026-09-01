@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+client/.env
+server/.env
+
+
+# Local runtime artifacts
+uploads/
+server/uploads/
+
+build
+package-lock.json
