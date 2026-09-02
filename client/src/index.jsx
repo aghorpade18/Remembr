@@ -24,7 +24,8 @@ function renderApp() {
 function showPopupStatus(message, isError) {
   const el = document.getElementById('root');
   if (!el) return;
-  el.innerHTML = `<div style="font-family:Segoe UI,system-ui,sans-serif;padding:32px;color:${isError ? '#b10e1c' : '#444'};max-width:520px;margin:0 auto;text-align:center;">${message}</div>`;
+  const tag = '<div style="margin-top:16px;font-size:11px;color:#aaa;">Remembr auth build 3</div>';
+  el.innerHTML = `<div style="font-family:Segoe UI,system-ui,sans-serif;padding:32px;color:${isError ? '#b10e1c' : '#444'};max-width:520px;margin:0 auto;text-align:center;">${message}${tag}</div>`;
 }
 
 // Handles the Teams-managed auth popup: kicks off the MSAL redirect, then returns the token to the tab.
