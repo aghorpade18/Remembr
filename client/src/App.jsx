@@ -4,11 +4,12 @@ import {
   TabList, Tab, makeStyles, Title1, Spinner
 } from '@fluentui/react-components';
 import {
-  ShieldLock24Regular, DocumentAdd24Regular, PlugConnected24Regular
+  ShieldLock24Regular, DocumentAdd24Regular, PlugConnected24Regular, BrainCircuit24Regular
 } from '@fluentui/react-icons';
 import Permissions from './pages/Permissions';
 import Skills from './pages/Skills';
 import Integrations from './pages/Integrations';
+import Memory from './pages/Memory';
 import { getGraphToken } from './authConfig';
 import { getTeamDisplayName } from './utils/teamDisplay';
 
@@ -78,7 +79,8 @@ const useStyles = makeStyles({
 const TAB_ROUTES = [
   { value: '/', label: 'Permissions & Configuration', icon: <ShieldLock24Regular /> },
   { value: '/skills', label: 'Skills', icon: <DocumentAdd24Regular /> },
-  { value: '/integrations', label: 'Integrations', icon: <PlugConnected24Regular /> }
+  { value: '/integrations', label: 'Integrations', icon: <PlugConnected24Regular /> },
+  { value: '/memory', label: 'Memory', icon: <BrainCircuit24Regular /> }
 ];
 
 const DEFAULT_TEAM_NAMES = ['Team EDX', 'EDX'];
@@ -173,6 +175,7 @@ export default function App() {
             <Route path="/" element={<Permissions key={teamId} teamId={teamId} />} />
             <Route path="/skills" element={<Skills key={teamId} teamId={teamId} />} />
             <Route path="/integrations" element={<Integrations key={teamId} teamId={teamId} />} />
+            <Route path="/memory" element={<Memory key={teamId} teamId={teamId} />} />
           </Routes>
         ) : (
           <div className={styles.centered}>{teamError || 'No team is selected.'}</div>

@@ -5,6 +5,7 @@ const skillsRouter = require('./routes/skills');
 const integrationsRouter = require('./routes/integrations');
 const teamTokensRouter = require('./routes/teamTokens');
 const graphRouter = require('./routes/graph');
+const memoryRouter = require('./routes/memory');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/skills', skillsRouter);
 app.use('/api/integrations', integrationsRouter);
 app.use('/api/team-tokens', teamTokensRouter);
 app.use('/api/graph', graphRouter);
+app.use('/api/memory', memoryRouter);
 
 app.use((err, _req, res, _next) => {
   console.error(err);
