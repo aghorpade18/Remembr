@@ -77,7 +77,7 @@ const useStyles = makeStyles({
 });
 
 const TAB_ROUTES = [
-  { value: '/', label: 'Permissions & Configuration', icon: <ShieldLock24Regular /> },
+  { value: '/', label: 'Configuration & Permissions', icon: <ShieldLock24Regular /> },
   { value: '/skills', label: 'Skills', icon: <DocumentAdd24Regular /> },
   { value: '/integrations', label: 'Integrations', icon: <PlugConnected24Regular /> },
   { value: '/memory', label: 'Memory', icon: <BrainCircuit24Regular /> }

@@ -98,6 +98,7 @@ export default function Permissions({ teamId }) {
 
   return (
     <div className={styles.pageStack}>
+      <TeamTokens teamId={teamId} />
       <div className={styles.panel}>
         <div className={styles.toolbar}>
           <div className={styles.titleBlock}>
@@ -187,8 +188,6 @@ export default function Permissions({ teamId }) {
           </DialogSurface>
         </Dialog>
       </div>
-
-      <TeamTokens teamId={teamId} />
     </div>
   );
 }

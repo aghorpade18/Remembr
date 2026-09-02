@@ -137,7 +137,7 @@ function IntegrationCardBase({ integration, saving, onToggle, onSave }) {
 
     const toggle = (_, data) => {
         onToggle(data.checked);
-        setConfigOpen(data.checked);
+        if (!data.checked) setConfigOpen(false);
     };
 
     const connect = () => {
