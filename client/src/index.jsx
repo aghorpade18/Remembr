@@ -20,16 +20,25 @@ function renderApp() {
   );
 }
 
+// Shows a plain status/error message in the auth popup so it never sits on a blank white screen.
+function showPopupStatus(message, isError) {
+  const el = document.getElementById('root');
+  if (!el) return;
+  el.innerHTML = `<div style="font-family:Segoe UI,system-ui,sans-serif;padding:32px;color:${isError ? '#b10e1c' : '#444'};max-width:520px;margin:0 auto;text-align:center;">${message}</div>`;
+}
+
 // Handles the Teams-managed auth popup: kicks off the MSAL redirect, then returns the token to the tab.
 async function runTeamsAuthPopup(isStart) {
   await msalInstance.initialize();
 
   if (isStart) {
     sessionStorage.setItem(TEAMS_AUTH_SESSION_KEY, '1');
+    showPopupStatus('Redirecting you to sign in\u2026');
     await msalInstance.loginRedirect({ scopes: graphScopes, redirectUri: window.location.origin });
     return;
   }
 
+  showPopupStatus('Completing sign-in\u2026');
   try {
     let response = await msalInstance.handleRedirectPromise();
     sessionStorage.removeItem(TEAMS_AUTH_SESSION_KEY);
@@ -52,13 +61,18 @@ async function runTeamsAuthPopup(isStart) {
     if (accessToken) {
       teamsAuth.notifySuccess(JSON.stringify({ accessToken, expiresOn }));
     } else {
+      showPopupStatus('Sign-in did not return a token. Please close this window and try again.', true);
       teamsAuth.notifyFailure('No token returned from sign-in');
     }
   } catch (err) {
     sessionStorage.removeItem(TEAMS_AUTH_SESSION_KEY);
     const inTeams = await initTeams();
-    if (inTeams) teamsAuth.notifyFailure(err.message || 'Sign-in failed');
-    else renderApp();
+    if (inTeams) {
+      showPopupStatus(`Sign-in failed: ${err.message || 'Unknown error'}`, true);
+      teamsAuth.notifyFailure(err.message || 'Sign-in failed');
+    } else {
+      renderApp();
+    }
   }
 }
 
