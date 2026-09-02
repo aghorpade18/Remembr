@@ -15,11 +15,6 @@ const skillSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-skillSchema.index(
-  { teamId: 1, department: 1 },
-  { unique: true, partialFilterExpression: { status: 'active' }, name: 'one_active_per_department' }
-);
-
 skillSchema.pre('save', function () { this.updatedAt = Date.now(); });
 
 module.exports = mongoose.model('Skill', skillSchema);

@@ -77,16 +77,9 @@ export function useSkills(teamId, department) {
             if (!response.ok) throw new Error(await readError(response, 'Failed to change status'));
             const updated = await response.json();
             if (!activeRef.current) return;
-            setSkills((current) => current.map((entry) => {
-                if (entry._id === updated._id) return updated;
-                if (status === 'active'
-                    && entry.status === 'active'
-                    && entry.teamId === updated.teamId
-                    && entry.department === updated.department) {
-                    return { ...entry, status: 'inactive' };
-                }
-                return entry;
-            }));
+            setSkills((current) => current.map((entry) => (
+                entry._id === updated._id ? updated : entry
+            )));
         } catch (err) {
             if (activeRef.current) setError(err.message);
         }

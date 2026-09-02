@@ -99,26 +99,11 @@ router.patch('/:id/status', async (req, res, next) => {
     const skill = await Skill.findById(req.params.id);
     if (!skill) return res.status(404).json({ error: 'Not found' });
 
-    if (status === 'active') {
-      await Skill.updateMany(
-        {
-          teamId: skill.teamId,
-          department: skill.department,
-          status: 'active',
-          _id: { $ne: skill._id }
-        },
-        { status: 'inactive', updatedAt: Date.now() }
-      );
-    }
-
     skill.status = status;
     skill.updatedAt = Date.now();
     await skill.save();
     res.json(skill);
   } catch (err) {
-    if (err.code === 11000) {
-      return res.status(409).json({ error: 'Another skill is already active for this department' });
-    }
     next(err);
   }
 });
