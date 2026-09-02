@@ -29,50 +29,55 @@ function showPopupStatus(message, isError) {
 
 // Handles the Teams-managed auth popup: kicks off the MSAL redirect, then returns the token to the tab.
 async function runTeamsAuthPopup(isStart) {
-  await msalInstance.initialize();
-
-  if (isStart) {
-    sessionStorage.setItem(TEAMS_AUTH_SESSION_KEY, '1');
-    showPopupStatus('Redirecting you to sign in\u2026');
-    await msalInstance.loginRedirect({ scopes: graphScopes, redirectUri: window.location.origin });
-    return;
-  }
-
-  showPopupStatus('Completing sign-in\u2026');
   try {
-    let response = await msalInstance.handleRedirectPromise();
-    sessionStorage.removeItem(TEAMS_AUTH_SESSION_KEY);
+    await msalInstance.initialize();
 
-    // Fall back to the freshly-cached account if the redirect response was already consumed.
-    let accessToken = response && response.accessToken;
-    let expiresOn = response && response.expiresOn;
-    if (!accessToken) {
-      const account = msalInstance.getAllAccounts()[0];
-      if (account) {
-        const silent = await msalInstance.acquireTokenSilent({ scopes: graphScopes, account });
-        accessToken = silent.accessToken;
-        expiresOn = silent.expiresOn;
-      }
+    // Process any pending redirect first; this also clears stale interaction_in_progress state.
+    const response = await msalInstance.handleRedirectPromise();
+    if (response && response.accessToken) {
+      await finishPopup(response.accessToken, response.expiresOn);
+      return;
     }
 
-    const inTeams = await initTeams();
-    if (!inTeams) { renderApp(); return; }
-
-    if (accessToken) {
-      teamsAuth.notifySuccess(JSON.stringify({ accessToken, expiresOn }));
-    } else {
-      showPopupStatus('Sign-in did not return a token. Please close this window and try again.', true);
-      teamsAuth.notifyFailure('No token returned from sign-in');
+    if (isStart) {
+      sessionStorage.setItem(TEAMS_AUTH_SESSION_KEY, '1');
+      showPopupStatus('Redirecting you to sign in\u2026');
+      await msalInstance.loginRedirect({ scopes: graphScopes, redirectUri: window.location.origin });
+      return;
     }
+
+    // Returned from Azure but the response was already consumed \u2014 use the cached account.
+    const account = msalInstance.getAllAccounts()[0];
+    if (account) {
+      const silent = await msalInstance.acquireTokenSilent({ scopes: graphScopes, account });
+      await finishPopup(silent.accessToken, silent.expiresOn);
+      return;
+    }
+
+    renderApp();
   } catch (err) {
     sessionStorage.removeItem(TEAMS_AUTH_SESSION_KEY);
     const inTeams = await initTeams();
     if (inTeams) {
-      showPopupStatus(`Sign-in failed: ${err.message || 'Unknown error'}`, true);
+      const detail = `${err.errorCode || ''} ${err.message || 'Unknown error'}`.trim();
+      showPopupStatus(`Sign-in failed: ${detail}`, true);
       teamsAuth.notifyFailure(err.message || 'Sign-in failed');
     } else {
       renderApp();
     }
+  }
+}
+
+async function finishPopup(accessToken, expiresOn) {
+  sessionStorage.removeItem(TEAMS_AUTH_SESSION_KEY);
+  showPopupStatus('Completing sign-in\u2026');
+  const inTeams = await initTeams();
+  if (!inTeams) { renderApp(); return; }
+  if (accessToken) {
+    teamsAuth.notifySuccess(JSON.stringify({ accessToken, expiresOn }));
+  } else {
+    showPopupStatus('Sign-in did not return a token. Please close this window and try again.', true);
+    teamsAuth.notifyFailure('No token returned from sign-in');
   }
 }
 
