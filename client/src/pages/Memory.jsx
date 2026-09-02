@@ -64,7 +64,7 @@ export default function Memory({ teamId }) {
             <div className={styles.toolbar}>
                 <div className={styles.titleBlock}>
                     <Text className={styles.pageTitle}>Memory</Text>
-                    <Text size={200}>The agent remembers useful details from chats for this department.</Text>
+                    <Text size={200}>The agent remembers useful details from chats for this Teams.</Text>
                 </div>
                 <div className={styles.toolbarControl}>
                     <DepartmentPicker departments={departments} value={selectedDepartment} onChange={setSelectedDepartment} />
