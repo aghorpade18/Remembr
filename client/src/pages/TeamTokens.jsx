@@ -27,7 +27,7 @@ export default function TeamTokens({ teamId }) {
                     <Text size={200}>Enable or disable token usage for Teams groups or channels.</Text>
                 </div>
                 <Button appearance="primary" icon={<Add24Regular />} onClick={addRow}>
-                    Add row
+                    Add
                 </Button>
             </div>
 

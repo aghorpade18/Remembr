@@ -5,7 +5,10 @@ const msalConfig = {
   auth: {
     clientId: process.env.REACT_APP_AAD_CLIENT_ID || 'YOUR_CLIENT_ID',
     authority: `https://login.microsoftonline.com/${process.env.REACT_APP_AAD_TENANT_ID || 'common'}`,
-    redirectUri: window.location.origin
+    redirectUri: window.location.origin,
+    // Process the redirect response on the return page instead of navigating back to
+    // '/?teamsAuth=1', which would re-trigger loginRedirect and loop on "Redirecting you to sign in…".
+    navigateToLoginRequestUrl: false
   },
   // localStorage so the Teams auth popup and the tab share MSAL state on the same origin.
   cache: { cacheLocation: 'localStorage' }

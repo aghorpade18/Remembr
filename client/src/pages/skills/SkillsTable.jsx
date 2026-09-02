@@ -10,6 +10,11 @@ import {
 import { useSkillsStyles } from './styles';
 
 const STATUS_COLOR = { active: 'success', inactive: 'informative', draft: 'warning' };
+const STATUS_LABELS = { active: 'Active', inactive: 'Inactive', draft: 'Pending approval' };
+
+function statusLabel(status = '') {
+    return STATUS_LABELS[status] || (status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Unknown');
+}
 
 function SkillRowBase({ skill, onActivate, onDeactivate, onSetDraft, onView, onDelete }) {
     const styles = useSkillsStyles();
@@ -19,7 +24,6 @@ function SkillRowBase({ skill, onActivate, onDeactivate, onSetDraft, onView, onD
                 <Text className={styles.cellLabel} size={200} weight="semibold">File name</Text>
                 <div className={styles.skillNameBlock}>
                     <Text weight="semibold">{skill.originalName}</Text>
-                    <Text size={200}>{skill.contentType || 'json'}</Text>
                 </div>
             </div>
             <div className={styles.cell} role="cell">
@@ -29,7 +33,7 @@ function SkillRowBase({ skill, onActivate, onDeactivate, onSetDraft, onView, onD
             <div className={styles.cell} role="cell">
                 <Text className={styles.cellLabel} size={200} weight="semibold">Status</Text>
                 <Badge appearance="filled" color={STATUS_COLOR[skill.status] || 'informative'}>
-                    {skill.status.charAt(0).toUpperCase() + skill.status.slice(1)}
+                    {statusLabel(skill.status)}
                 </Badge>
             </div>
             <div className={styles.cell} role="cell">
@@ -59,12 +63,12 @@ function SkillRowBase({ skill, onActivate, onDeactivate, onSetDraft, onView, onD
                         </Tooltip>
                     )}
                     {skill.status !== 'draft' && (
-                        <Tooltip content="Move back to draft" relationship="label" withArrow>
+                        <Tooltip content="Move to pending approval" relationship="label" withArrow>
                             <Button
                                 size="small"
                                 icon={<DocumentEdit24Regular />}
                                 onClick={onSetDraft}
-                                aria-label="Move back to draft"
+                                aria-label="Move to pending approval"
                             />
                         </Tooltip>
                     )}

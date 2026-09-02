@@ -7,9 +7,10 @@ import { CheckmarkCircle24Regular, Search24Regular } from '@fluentui/react-icons
 import { useSkillsStyles } from './styles';
 
 const STATUS_COLOR = { active: 'success', inactive: 'informative', draft: 'warning' };
+const STATUS_LABELS = { active: 'Active', inactive: 'Inactive', draft: 'Pending approval' };
 
 function statusLabel(status = '') {
-    return status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Unknown';
+    return STATUS_LABELS[status] || (status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Unknown');
 }
 
 function contentSummary(skill) {
@@ -64,7 +65,6 @@ export function SkillDirectoryDialog({ open, onOpenChange, skills, onSelect }) {
                                         {skill.status === 'active' ? <CheckmarkCircle24Regular /> : <span>+</span>}
                                     </div>
                                     <div className={styles.directoryMeta}>
-                                        <span>{skill.contentType || 'json'}</span>
                                         <Badge appearance="tint" color={STATUS_COLOR[skill.status] || 'informative'}>
                                             {statusLabel(skill.status)}
                                         </Badge>

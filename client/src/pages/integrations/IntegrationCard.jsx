@@ -173,15 +173,18 @@ function IntegrationCardBase({ integration, saving, onToggle, onSave }) {
             <Dialog open={configOpen && integration.enabled} onOpenChange={(_, data) => setConfigOpen(data.open)}>
                 <DialogSurface>
                     <DialogBody>
-                        <div className={styles.dialogHeader}>
-                            <DialogTitle>{toolLabel(integration.tool)} configuration</DialogTitle>
-                            <Button
-                                appearance="subtle"
-                                icon={<Dismiss24Regular />}
-                                aria-label="Cancel configuration"
-                                onClick={() => setConfigOpen(false)}
-                            />
-                        </div>
+                        <DialogTitle
+                            action={
+                                <Button
+                                    appearance="subtle"
+                                    icon={<Dismiss24Regular />}
+                                    aria-label="Cancel configuration"
+                                    onClick={() => setConfigOpen(false)}
+                                />
+                            }
+                        >
+                            {toolLabel(integration.tool)} configuration
+                        </DialogTitle>
                         <DialogContent>
                             <div className={styles.fields}>
                                 <Field label="Base URL">

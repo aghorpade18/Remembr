@@ -82,7 +82,7 @@ export function CreateSkillDialog({ open, onOpenChange, department, onCreate }) 
                                 resize="vertical"
                             />
                         </Field>
-                        <div className={styles.draftBadge}>Draft</div>
+                        <div className={styles.draftBadge}>Pending approval</div>
                         {error && <Text className={styles.error}>{error}</Text>}
                     </DialogContent>
                     <DialogActions className={styles.dialogActions}>

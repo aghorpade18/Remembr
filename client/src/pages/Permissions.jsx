@@ -110,7 +110,7 @@ export default function Permissions({ teamId }) {
             onClick={handleAdd}
             disabled={hasDraftRow || !canAddRow}
           >
-            Add row
+            Add
           </Button>
         </div>
 

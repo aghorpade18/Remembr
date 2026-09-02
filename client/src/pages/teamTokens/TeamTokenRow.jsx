@@ -68,15 +68,15 @@ function TeamTokenRowBase({
                 {editing ? (
                     <Input
                         className={styles.tokenInput}
-                        type="number"
-                        min={0}
+                        type="text"
                         value={row.token === undefined || row.token === null ? '' : String(row.token)}
                         disabled={saving}
+                        placeholder="e.g. 2000k"
                         aria-label={`Token usage for ${rowLabel}`}
                         onChange={(_, data) => onTokenChange(row, data.value)}
                     />
                 ) : (
-                    <Text className={styles.readValue}>{row.token ?? 0}</Text>
+                    <Text className={styles.readValue}>{row.token || '-'}</Text>
                 )}
             </div>
             <div className={styles.cell} role="cell">

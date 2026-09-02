@@ -35,7 +35,7 @@ router.put('/',
     body('targetType').isIn(TARGET_TYPES),
     body('targetId').notEmpty(),
     body('targetName').notEmpty(),
-    body('token').optional().isFloat({ min: 0 }),
+    body('token').optional().isString(),
     body('enabled').optional().isBoolean(),
     validate,
     async (req, res, next) => {
@@ -46,7 +46,7 @@ router.put('/',
                 targetType,
                 targetId,
                 targetName: req.body.targetName.trim(),
-                token: Number(req.body.token || 0),
+                token: (req.body.token ?? '').toString().trim(),
                 enabled: req.body.enabled !== undefined ? req.body.enabled : true,
                 updatedAt: Date.now()
             };

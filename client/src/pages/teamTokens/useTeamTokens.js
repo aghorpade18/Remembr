@@ -3,15 +3,13 @@ import { getGraphToken } from '../../authConfig';
 
 const DEFAULT_TARGETS = {
     channel: [
-        { id: 'manual-channel-team-akshara', displayName: 'Team Akshara' }
+        { id: 'manual-channel-edx-devs-and-devops', displayName: 'EDX Devs & DevOps' }
     ],
     groupchat: [
-        { id: 'manual-group-frontend-pull-request-reviews', displayName: 'Frontend Pull Request Reviews' },
-        { id: 'manual-group-dbcu-b2b-edx-rnd', displayName: 'team-dbcu-b2b-edx-rnd' },
-        { id: 'manual-group-self-partner-onboarding-phase-2', displayName: 'Self Partner Onboarding Phase 2 Grooming' },
-        { id: 'manual-group-edx-scrum-standup', displayName: 'EDX Scrum Standup' },
-        { id: 'manual-group-retrospective-edx-eurex-c', displayName: 'Retrospective - EDX + Eurex-C' },
-        { id: 'manual-group-edx-dev-ux-sync-up', displayName: 'EDX Dev-UX sync up' }
+        { id: 'manual-group-support-tickets-discussion', displayName: 'Support Tickets Discussion' },
+        { id: 'manual-group-partner-onboarding-feature', displayName: 'Partner Onboarding Feature' },
+        { id: 'manual-group-edx-devs-and-devops', displayName: 'EDX Devs & DevOps' },
+        { id: 'manual-group-ask-edx-group', displayName: 'Ask Edx Group' }
     ]
 };
 
@@ -82,7 +80,7 @@ function createDraftRow(targets) {
         targetType: 'channel',
         targetId: firstChannel?.id || '',
         targetName: firstChannel?.displayName || '',
-        token: 0,
+        token: '',
         enabled: true,
         dirty: true,
         isEditing: true,
@@ -97,7 +95,7 @@ function toRows(tokens, targets) {
             targetType: token.targetType,
             targetId: token.targetId,
             targetName: target?.displayName || token.targetName,
-            token: token.token ?? 0,
+            token: token.token ?? '',
             enabled: token.enabled !== false,
             dirty: false,
             isEditing: false
@@ -222,7 +220,7 @@ export function useTeamTokens(teamId) {
                     targetType: row.targetType,
                     targetId: row.targetId,
                     targetName: row.targetName,
-                    token: Number(row.token || 0),
+                    token: (row.token ?? '').toString().trim(),
                     enabled: row.enabled !== false
                 })
             }, 'Failed to save token');
@@ -232,7 +230,7 @@ export function useTeamTokens(teamId) {
                     targetType: saved.targetType,
                     targetId: saved.targetId,
                     targetName: saved.targetName,
-                    token: saved.token ?? 0,
+                    token: saved.token ?? '',
                     enabled: saved.enabled !== false,
                     dirty: false,
                     isEditing: false
